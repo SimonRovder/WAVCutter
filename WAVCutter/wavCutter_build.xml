@@ -4,7 +4,7 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
-    <property name="package" value="base"/>
+    <property name="package" value="main.java.wavCutter"/>
     <property name="jarFile" value="wav-cutter"/>
 	
     <path id="WAVCutter.classpath">
@@ -28,12 +28,6 @@
             </fileset>
         </copy>
     	
-    	<copy includeemptydirs="false" todir="build">
-            <fileset dir="">
-                <include name="native/"/>
-            </fileset>
-        </copy>
-    	
     </target>
 	
     <target depends="init" name="build-classes">
@@ -46,15 +40,19 @@
     <target depends="build-classes" name="build">
         
     	<jar destfile="build/${jarFile}.jar" basedir="build" includes="${package}/**">
+            <fileset dir="build">
+                <exclude name="*.sh"/>
+            </fileset>
+
     		<zipgroupfileset dir="lib" includes="*.jar"/>
-			<manifest>
-				<attribute name="Main-Class" value="${package}.WAVCutter"/>
-			</manifest>
+		<manifest>
+			<attribute name="Main-Class" value="${package}.WAVCutter"/>
+		</manifest>
         </jar>
     	
         <delete dir="build/${package}"/>
     	
     	<echo message="It is ready. Use command: java -jar -Djava.library.path=./native/slick ${jarFile}.jar" />
     </target>
-	
+
 </project>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="WAVCutter">
+	
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <property name="package" value="main.java.wavCutter"/>
+    <property name="jarFile" value="wav-cutter"/>
+	
+    <path id="WAVCutter.classpath">
+        <pathelement location="lib/jaudiotagger-2.0.2.jar"/>
+        <pathelement location="lib/log4j-1.2.15.jar"/>
+        <pathelement location="lib/slf4j-api-1.5.8.jar"/>
+        <pathelement location="lib/slf4j-log4j12-1.5.8.jar"/>
+    </path>
+	
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+	
+    <target depends="clean" name="init">
+        <mkdir dir="build"/>
+        
+    	<copy includeemptydirs="false" todir="build">
+            <fileset dir="">
+                <exclude name="**/*.java"/>
+                <include name="src/main/resources/"/>
+            </fileset>
+        </copy>
+    	
+    </target>
+	
+    <target depends="init" name="build-classes">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="build" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src/main/java"/>
+            <classpath refid="WAVCutter.classpath"/>
+        </javac>
+    </target>
+	
+    <target depends="build-classes" name="build">
+        
+    	<jar destfile="build/${jarFile}.jar" basedir="build" includes="${package}/**">
+            <fileset dir="build">
+                <exclude name="*.sh"/>
+            </fileset>
+
+    		<zipgroupfileset dir="lib" includes="*.jar"/>
+		<manifest>
+			<attribute name="Main-Class" value="${package}.WAVCutter"/>
+		</manifest>
+        </jar>
+    	
+        <delete dir="build/${package}"/>
+    	
+    	<echo message="It is ready. Use command: java -jar -Djava.library.path=./native/slick ${jarFile}.jar" />
+    </target>
+	
+    <target depends="build" name="afterclean">
+        <echo message="Lala" />
+    </target>
+
+</project>
